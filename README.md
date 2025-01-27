@@ -16,8 +16,6 @@ socialDiscounting/
 └── README.md             # This file
 ```
 
-
-
 # Simulations
 
 ## Define the Hyperbolic Social Discounting Model
@@ -33,9 +31,8 @@ $$
 - \( s \): Social discounting rate (how generosity decreases with \( N \))
 - \( N \): Social distance (1, 2, 3, 5, 10, 20, 50, 100)
 
----
 
-## 2. Set Priors Based on Previous Studies
+## Set Priors Based on Previous Studies
 From Jones & Rachlin (2006):
 
 ### Parameters
@@ -52,8 +49,6 @@ s \sim \text{Normal}(0.05,\, 0.02)
 $$
 - **Mean**: 0.05  
 - **SD**: 0.02
-
----
 
 ### Notes
 - Social distances \( N \) are discrete values from the original study (Jones & Rachlin, 2006)
