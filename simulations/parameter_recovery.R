@@ -20,42 +20,57 @@ library(runjags)
 set.seed(34)  # Set seed for reproducibility
 
 n_subject <- 1                  # Number of subjects
-n_trials <- 72 # 8 distances x 9 amounts
-#social_distances <- c(1:100)  # Social distances (N) 
-social_distances <- c(1, 2, 3, 5, 10, 20, 50, 100) #only simulate for these distances
+social_distances <- c(0, 1, 2, 3, 5, 10, 20, 50, 100) #only simulate for these distances
 selfish_amounts <- seq(155, 75, by = -10)  # Selfish amounts i.e. offer_a (V)
 generous_amount <- 75                    # Fixed generous amount (both receive 75)
+n_trials <- length(social_distances) * length(selfish_amounts)  # 8 distances x 9 amounts
+#social_distances <- c(1:100)  # Social distances (N) 
+
 s <- runif(n_subject, 0, 0.5) # Social discount rate for one subject (prior suggests 0.052)
 individual_V <- c((rep(rnorm(n_subject, mean = 83, sd = 5),length(social_distances))))# undiscounted value (generosity at N=0) for each subject - for whole trials
 fixed_V <- c((rep(83,length(social_distances)))) # undiscounted value (generosity at N=0) from Jones and Rachlin 2006 paper
 
 v <- rep(0, length(social_distances))  # Amount forgone (generosity) for each social distance
-
 noise <- rnorm(length(social_distances), mean = 0, sd = 1) # Generate noise
 for (i in 1:length(social_distances)) {
   v[i] <- individual_V[i]/(1 + s*social_distances[i]) + noise[i] # Add noise to v[i]
 }
 
-print(s)
+# Adjust plot margins for better visibility of labels
+#mar = c(bottom, left, top, right)
+#mgp = c(bottom, left, top)
+par(mar =  c(7, 8, 6, 2), mgp = c(5, 2, 0))  # Increase left margin to make space for y-axis labe
+
+title_text <- paste(
+  "Participant #1, s =", round(s, 2), "\n",  # s value with a line break
+  "Initial V =", round(individual_V[1], 2)  # individual_V value with a line break
+)
+
 plot(social_distances, v,
      type = "b",  # "b" for both points and lines
-     pch = 10,      # Use filled circles (adjust as needed)
+     pch = 15,      # Use filled circles (adjust as needed)
      cex = 1,       # Make points thicker (adjust as needed)
      lwd = 2,      # Make lines thicker
      xlab = "Social Distance", 
      ylab = "Generous offer (amount forgone)",
-     main = paste("Participant #1, s =", round(s, 2)), # Title with s value
+     main = title_text, # Title with s value
+     cex.axis = 3.5,   # Increase axis text size
+     cex.lab = 3.5,    # Increase label size
+     cex.main = 3,   # Increase title size
 )
+
+# Custom y-axis with larger tick labels and ticks
+axis(2, cex.axis = 2, tck = 0.1, las = 15) 
 # Add connecting lines
 lines(social_distances, v, lwd=2)
 
 # ----------------- Simulate Social Discounting like Wu ----------------- #
 # Parameters from literature Jones & Rachlin (2006) and Wu paper
 n_subject <- 15            # Number of subjects
-n_trials <- 72 # 8 distances x 9 amounts
-#social_distances <- c(1:100)  # Social distances (N) 
 social_distances <- c(1, 2, 3, 5, 10, 20, 50, 100) #only simulate for these distances
 selfish_amounts <- seq(155, 75, by = -10)  # Selfish amounts i.e. offer_a (V)
+n_trials <- length(social_distances) * length(selfish_amounts)  # 8 distances x 9 amounts
+
 generous_amount <- 75                    # Fixed generous amount (both receive 75)
 s <- runif(n_subject, 0, 0.5) # Social discount rate for each subject (prior suggests 0.052)
 individual_V <- c((rep(rnorm(n_subject, mean = 83, sd = 5),length(n_subject))))# undiscounted value (generosity at N=0) for each subject
