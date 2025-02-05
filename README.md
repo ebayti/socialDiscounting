@@ -1,4 +1,5 @@
 # Social and Temporal Discounting and Ambience Effects
+
 This repository contains the code and documentation for my first PhD project, which explores the phenomenon of Social Discounting. Jones & Rachlin (2006) demonstrated that individuals' willingness to forgo personal rewards in favor of benefiting others decreases hyperbolically with increasing social distance. In the current project, we will raise two questions:
 1- Is there a relationship between social discounting and temporal discounting?
 2- Do ambient temperature differences influence social discounting behavior?
