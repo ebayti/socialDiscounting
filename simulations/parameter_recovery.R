@@ -139,7 +139,7 @@ data_list <- list(v = df$v,
                   V = df$V,
                   df_length = df_length,
                   n_subject = length(unique(df$subID)),
-                  sub_id = as.vector(df$subID),
+                  sub_id = as.vector(df$subID)
 )
 dat <- dump.format(data_list)
 
@@ -150,7 +150,7 @@ inits3 <- dump.format(list(.RNG.name="base::Mersenne-Twister", .RNG.seed=6666 ))
 
 monitor = c("s")
 
-model_file <- "simulations/models/sb_eb_model.txt"
+model_file <- "simulations/models/hyperbolic_discounting.txt"
 # Run the function that fits the models using JAGS
 fit <- run.jags(model=model_file, monitor=monitor,
                 data=dat, n.chains=3, inits=c(inits1, inits2, inits3), plots = TRUE, burnin=10000, 
