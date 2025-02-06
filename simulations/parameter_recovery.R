@@ -39,11 +39,11 @@ for (i in 1:length(social_distances)) {
 # Adjust plot margins for better visibility of labels
 #mar = c(bottom, left, top, right)
 #mgp = c(bottom, left, top)
-par(mar =  c(7, 8, 6, 2), mgp = c(5, 2, 0))  # Increase left margin to make space for y-axis labe
+par(mar =  c(7, 8, 6, 2), mgp = c(5, 2, 0))  # Increase left margin to make space for y-axis label
 
 title_text <- paste(
   "Participant #1, s =", round(s, 2), "\n",  # s value with a line break
-  "Initial V =", round(individual_V[1], 2)  # individual_V value with a line break
+  "Social premium =", round(individual_V[1], 2)  # individual_V value with a line break
 )
 
 plot(social_distances, v,
@@ -52,7 +52,7 @@ plot(social_distances, v,
      cex = 1,       # Make points thicker (adjust as needed)
      lwd = 2,      # Make lines thicker
      xlab = "Social Distance", 
-     ylab = "Generous offer (amount forgone)",
+     ylab = "Amount forgone (generosity)",
      main = title_text, # Title with s value
      cex.axis = 3.5,   # Increase axis text size
      cex.lab = 3.5,    # Increase label size
@@ -96,31 +96,82 @@ df$noise <- NA
 df$v <- NA
 
 for (i in 1:df_length) {
-  df$v[i] <- df$V[i]/(1 + df$s[i]*df$distance[i]) + rnorm(1, mean = 0, sd = 3) #siugfdhoaupsjvdbguadhsosdi (noise)
+  df$v[i] <- pmax(df$V[i]/(1 + df$s[i]*df$distance[i]) + rnorm(1, mean = 0, sd = 3)) #siugfdhoaupsjvdbguadhsosdi (noise)
 }
 
 # ----------------- Plot the Data ----------------- #
-ggplot(df, aes(x = distance, y = v, color = as.factor(subID), group = subID)) +  # Add 'group' aesthetic
-  geom_jitter(width = 0.2) + 
-  geom_line() +  # add lines 
-  labs(x = "Social Distance", y = "Value Offered", color = "Subject ID") + 
-  theme_bw() 
+title_text <- paste(
+  "Number of participants =", n_subject, "\n",  # s value with a line break
+  "Mean social premium =", round(individual_V[1], 2)  # individual_V value with a line break
+)
 
 
+ggplot(df, aes(x = distance, y = v, color = as.factor(subID), group = subID)) +
+  geom_jitter(width = 0.2, size = 2, shape = 15) +  # Add jitter and adjust point size and shape (filled squares)
+  geom_line(size = 1) +  # Adjust line thickness
+  labs(
+    x = "Social Distance", 
+    y = "Amount forgone (generosity)", 
+    color = "Subject ID",
+    title = title_text  # Dynamic title
+  ) +
+  theme_bw() + 
+  theme(
+    axis.text = element_text(size = 20),      # Increase axis text size
+    axis.title = element_text(size = 24),     # Increase axis title size
+    plot.title = element_text(size = 26, hjust = 0.5),     # Increase title size
+    legend.title = element_text(size = 20),   # Adjust legend title size
+    legend.text = element_text(size = 18)     # Adjust legend text size
+  )
+
+
+# ----------------- Plot the mean of each participant ----------------- #
+# Summarize the data
+df_summary <- df %>%
+  group_by(subID, distance) %>%
+  summarize(mean_v = mean(v, na.rm = TRUE), .groups = "drop")
+
+ggplot(df_summary, aes(x = distance, y = mean_v, color = as.factor(subID), group = subID)) +
+  geom_point(size = 3, shape = 16) +  # Add points for the mean values
+  geom_line(size = 1) +  # Connect the mean points with lines
+  labs(
+    x = "Social Distance", 
+    y = "Mean Amount Forgone (Generosity)", 
+    color = "Subject ID",
+    title = "Generosity by Social Distance"
+  ) +
+  theme_bw() + 
+  theme(
+    axis.text = element_text(size = 30),       # Increase axis tick label size
+    axis.title = element_text(size = 25, face = "bold"),  # Increase axis title size and make bold
+    plot.title = element_text(size = 30, face = "bold", hjust = 0.5),  # Increase title size and make bold
+    legend.title = element_text(size = 25),   # Increase legend title size
+    legend.text = element_text(size = 22)     # Increase legend text size
+  )
 # ----------------- OVERALL PLOT ----------------- #
 errors <- tapply(df$v, df$distance, sd)  # Check error?
 v_means <- tapply(df$v, df$distance, mean)  # Check mean?
 mean_s <- mean(df$s)  # Check mean s?
+
+# Title for the plot
+title_text <- paste("Hyperbolic Discounting\n",
+  "(mean s =", round(mean_s, 2), ")\n",  # s value with a line break # Average generosity value with a line break
+)
+
 # Create the plot
 plot(social_distances, v_means,  # Plot the means, not v directly
      type = "b",  # "b" for both points and lines
-     pch = 16,      # Use filled circles (adjust as needed)
-     cex = 1.5,       # Make points thicker (adjust as needed)
-     lwd = 1.2,      # Make lines thicker
+     pch = 15,      # Filled squares for points (adjust as needed)
+     cex = 1.5,     # Increase point size
+     lwd = 2,       # Increase line width
      xlab = "Social Distance", 
-     ylab = "Generous offer (amount forgone)",
-     main = paste("mean s = " , mean_s), # Title with s value
-     ylim = c(min(v_means - errors), max(v_means + errors)))  # Set y-axis limits for error bars
+     ylab = "Generosity (Amount Forgone)",
+     main = title_text, # Use the formatted title
+     cex.axis = 2,   # Larger axis text size
+     cex.lab = 2,    # Larger label size
+     cex.main = 2,   # Larger title size
+     ylim = c(min(v_means - errors), max(v_means + errors)))  # Y-limits for error bars
+
 
 # Add error bars
 arrows(social_distances, v_means - errors, social_distances, v_means + errors, 
@@ -132,6 +183,7 @@ lines(social_distances, v_means, lwd=1.2)
 # Improve aesthetics (optional)
 grid(col = "lightgray", lty = "dotted")  # Add a grid
 
+axis(2, cex.axis = 2, tck = 0.1, las = 15) # Custom y-axis with larger tick labels and ticks
 
 # ----------------- Fit the Model ----------------- #
 data_list <- list(v = df$v,
