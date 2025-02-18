@@ -26,7 +26,7 @@ generous_amount <- 75                    # Fixed generous amount (both receive 7
 n_trials <- length(social_distances) * length(selfish_amounts)  # 8 distances x 9 amounts
 #social_distances <- c(1:100)  # Social distances (N) 
 
-s <- runif(n_subject, 0, 0.5) # Social discount rate for one subject (prior suggests 0.052)
+s <- runif(n_subject, 0, 0.05) # Social discount rate for one subject (prior suggests 0.052)
 individual_V <- c((rep(rnorm(n_subject, mean = 83, sd = 5),length(social_distances))))# undiscounted value (generosity at N=0) for each subject - for whole trials
 fixed_V <- c((rep(83,length(social_distances)))) # undiscounted value (generosity at N=0) from Jones and Rachlin 2006 paper
 
