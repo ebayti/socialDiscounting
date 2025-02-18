@@ -1,0 +1,17 @@
+model{
+  # Priors 
+  for (j in 1:n_subject) {          
+    beta[j] ~ dbeta(1, 1)          # Present-bias parameter (0 < beta ≤ 1)
+    delta[j] ~ dbeta(1, 1)         # Long-term discount factor (0 < delta ≤ 1)
+    sigma[j] ~ dunif(0.01, 10)        # Subject-specific noise
+  }
+
+  # Likelihood
+  for (i in 1:df_length) {          
+    # Discounted value formula for beta-delta model:
+    discount_factor[i] <- (1 - step(N[i] - 0.5)) * 1 +  # 1 if N=0 (immediate)
+                          step(N[i] - 0.5) * beta[sub_id[i]] * pow(delta[sub_id[i]], N[i])  # beta*delta^N if N > 0
+    mu[i] <- V[i] * discount_factor[i]  # Predicted discounted value
+    v[i] ~ dnorm(mu[i], 1/(sigma[sub_id[i]]^2))  # Observed value with noise
+  }
+}

@@ -1,7 +1,7 @@
 model{
   # Priors
   for (j in 1:n_subject) {          # Loop over subjects
-    s[j] ~ dnorm(0, 1) T(0,)        # Social discount rate (truncated at 0)
+    s[j] ~ dnorm(0.01, 1) T(0,)        # Social discount rate (truncated at 0)
     sigma[j] ~ dunif(0, 10)         # Subject-specific noise (uniform prior, no strong prior belief about the noise level)
   }
 
