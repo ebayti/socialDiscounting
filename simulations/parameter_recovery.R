@@ -1,4 +1,3 @@
-
 #Import libs
 library(tidyverse)
 library(ggplot2)
@@ -67,7 +66,7 @@ lines(social_distances, v, lwd=2)
 # ----------------- Simulate Social Discounting like Wu ----------------- #
 # Parameters from literature Jones & Rachlin (2006) and Wu paper
 n_subject <- 15            # Number of subjects
-social_distances <- c(1, 2, 3, 5, 10, 20, 50, 100) #only simulate for these distances
+social_distances <- c(1, 2, 3, 5, 10, 20) #only simulate for these distances
 selfish_amounts <- seq(155, 75, by = -10)  # Selfish amounts i.e. offer_a (V)
 n_trials <- length(social_distances) * length(selfish_amounts)  # 8 distances x 9 amounts
 
