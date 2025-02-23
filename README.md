@@ -35,9 +35,7 @@ From Jones & Rachlin (2006):
 
 ### Parameters
 **Baseline Generosity (\( V \)):**
-$$
-V \sim \text{Normal}(90,\, 20)
-$$
+$V \sim \text{Normal}(90,\, 20)$
 - **Mean**: 90  
 - **SD**: 20
 
